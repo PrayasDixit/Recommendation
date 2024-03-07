@@ -3,6 +3,7 @@ import os
 from PIL import Image
 import numpy as np
 import pickle
+import pandas as pd
 import tensorflow as tf
 from tensorflow.keras.layers import GlobalMaxPooling2D
 from tensorflow.keras.preprocessing import image
@@ -10,9 +11,13 @@ from tensorflow.keras.applications.resnet50 import ResNet50, preprocess_input
 from sklearn.neighbors import NearestNeighbors
 from numpy.linalg import norm
 
+#Read the file name
+
+data_image=pd.read_csv('./images.csv')
+
 # Load feature list and filenames from saved files
-feature_list = np.array(pickle.load(open('/content/embedd/embeddings.pkl', 'rb')))
-filenames = pickle.load(open('/content/filenames.pkl', 'rb'))
+feature_list = np.array(pickle.load(open('./embeddings.pkl', 'rb')))
+filenames = pickle.load(open('./filenames.pkl', 'rb'))
 
 # Define the ResNet50 model
 model = ResNet50(weights='imagenet', include_top=False, input_shape=(224, 224, 3))
@@ -67,7 +72,15 @@ if uploaded_file is not None:
         cols = st.columns(5)
         for i, col in enumerate(cols):
             with col:
-                recommended_image = Image.open(filenames[indices[0][i]])
-                st.image(recommended_image, use_column_width=True)
+                # st.write(indices[0])
+                # st.write(indices[0][i])
+                # recommended_image = Image.open(filenames[indices[0][i]])
+                file_path=filenames[indices[0][i]]
+                file_name=file_path.split('/')[-1]
+                # st.write(file_name)
+                image_link=data_image[data_image['filename']==file_name]['link'].iloc[0]
+                # st.write(filenames[indices[0][i]])
+
+                st.image(image_link, use_column_width=True)
 else:
     st.write("Please upload an image to get recommendations.")
