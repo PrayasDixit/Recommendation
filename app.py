@@ -30,7 +30,7 @@ model = tf.keras.Sequential([
 st.title('Fashion Recommender System')
 
 def save_uploaded_file(uploaded_file):
-    path = os.path.join('uploads', uploaded_file.name)
+    path = os.path.join('./uploads', uploaded_file.name)
     with open(path, 'wb') as f:
         f.write(uploaded_file.getbuffer())
     return path
